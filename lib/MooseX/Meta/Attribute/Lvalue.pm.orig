@@ -1,0 +1,173 @@
+package MooseX::Attribute::Lvalue;
+    
+  use Moose::Role;
+  our $VERSION = '0.02';
+  
+  has 'lvalue' => (
+      is  => 'rw' ,
+      isa => 'Bool' ,
+      predicate => 'has_lvalue' ,
+  );
+  
+
+# Check for BUILD method.  If it exists, install the lvalue writers after
+# the existing BUILD event.  Otherwise install as a BUILD method.
+  if ( __PACKAGE__->meta->has_method( 'BUILD' ) ) {
+
+    after BUILD => sub { 
+        $_[0]->_install_lvalue_writer;
+    };
+
+  
+  } else {
+
+    eval 'sub BUILD { $_[0]->_install_lvalue_writer; }'
+
+  };
+  
+
+# INSTALLS a _lvalue_writer for the attribute 
+  sub _install_lvalue_writer {
+    
+        my ( $self, @args ) = @_;
+
+        my %attributes = %{ $self->meta->get_attribute_map };
+        while ( my ($name, $attribute) = each %attributes) {
+
+            
+             if ( $attribute->does( 'MooseX::Attribute::Lvalue' ) ) {
+                $self->meta->add_method( $name, sub :lvalue { $_[0]->{ $name } } );
+             }
+
+        }          
+
+
+  }
+
+
+
+package Moose::Meta::Attribute::Custom::Trait::Lvalue;
+
+  sub register_implementation { 
+    'MooseX::Attribute::Lvalue' ;
+  };
+
+1;
+
+__END__
+
+=pod
+
+=head1 NAME
+
+MooseX::Attribute::Lvalue - Role/Trait that optionally implements lvalue accessor for Moose attributes
+
+=head1 VERSION
+
+Version 0.02
+
+=head1 SYNOPSIS
+
+    package App;
+        use Moose;
+        with 'MooseX::Attribute::Lvalue';
+
+        has 'name' => (
+            is          => 'rw' ,
+            isa         => 'Str' ,
+            required    => 1 ,
+            traits => [ 'Lvalue' ] ,   # DO NOT FORGET THIS
+            lvalue      => 1 
+        );
+
+
+    package main;
+        my $app = App->new( name => 'Foo' );
+
+        $app->name = "Bar";      
+        print $app->name;       # Bar
+
+
+
+=head1 DESCRIPTION
+
+This package provides a Moose role/trait that provides Lvalue accessors
+to your Moose attributes.    
+
+Moose does not support lvalue accessors due to existing limitations in
+the lvalue implementation.  Specifically, the lvalue accessors break
+certain encapsulations.  With simple classes, sometimes you don't care.
+
+MooseX::Attribute::Lvalue role/trait that installs a lvalue setter.
+
+While how/when the lvalue accessor gets built might change, the 
+API will not likely change.
+
+=head1 EXPORT
+
+None by default.
+
+=head1 TODO
+
+* Type checking?  Only allow lvalue on certain types. 
+
+* Better implementation of the lvalue accessor build
+
+* Better name?
+* MooseX::Meta::Attribute::Trait::Lvalue
+* MooseX::Meta::Attribute::Lvalue
+
+=head1 AUTHOR
+
+Christopher Brown, C<< <ctbrown at cpan.org> >>
+
+=head1 BUGS
+
+Please report any bugs or feature requests to C<bug-moosex-attribute-lvalue at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=MooseX-Attribute-Lvalue>.  I will be notified, and then you'll
+automatically be notified of progress on your bug as I make changes.
+
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc MooseX::Attribute::Lvalue
+
+
+You can also look for information at:
+
+=over 4
+
+=item * RT: CPAN's request tracker
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=MooseX-Attribute-Lvalue>
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/MooseX-Attribute-Lvalue>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/d/MooseX-Attribute-Lvalue>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/MooseX-Attribute-Lvalue>
+
+=back
+
+
+=head1 ACKNOWLEDGEMENTS
+
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright 2008 Christopher Brown, all rights reserved.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
+
+
+=cut
+
+1; # End of MooseX::Attribute::Lvalue
