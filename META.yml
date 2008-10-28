@@ -15,4 +15,7 @@ no_index:
   directory:
     - inc
     - t
-version: 0.02
+requires:
+  Moose: 0
+  Moose::Role: 0
+version: 0.03

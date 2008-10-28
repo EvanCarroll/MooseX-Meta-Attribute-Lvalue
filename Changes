@@ -1,5 +1,10 @@
 Revision history for MooseX-Meta-Attribute-Lvalue
 
-0.01    Date/time
-        First version, released on an unsuspecting world.
+0.03    Oct 27 2008
+        - Makefile requires Moose, Moose::Role
+        - Fixed logic to test for 'rw' attribute
+
+
+0.02    Oct 23 2008
+        - First CPAN release 
 

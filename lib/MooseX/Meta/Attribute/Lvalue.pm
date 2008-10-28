@@ -1,7 +1,7 @@
 package MooseX::Meta::Attribute::Lvalue;
     
 
-  our $VERSION = '0.02';
+  our $VERSION = '0.03';
   our $AUTHORITY = 'cpan:CTBROWN';
 
   use Moose::Role;
@@ -30,7 +30,7 @@ package MooseX::Meta::Attribute::Lvalue;
             if ( 
                 $attribute->does( 'MooseX::Meta::Attribute::Trait::Lvalue' ) 
                 and $attribute->{ lvalue }
-                and $attribute->{is} eq 'rw'
+                and $attribute->_is_metadata eq 'rw'
             ) {
 
                 $self->meta->add_method( 

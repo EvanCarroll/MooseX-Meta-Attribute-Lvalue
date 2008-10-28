@@ -11,15 +11,11 @@ inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
-lib/MooseX/Meta/Attribute/.Lvalue.pm.swo
-lib/MooseX/Meta/Attribute/.Lvalue.pm.swp
 lib/MooseX/Meta/Attribute/Lvalue.pm
-lib/MooseX/Meta/Attribute/Lvalue.pm.orig
 Makefile.PL
 MANIFEST
 META.yml
 README
-t/.MooseX-Meta-Attribute-Lvalue.t.swp
 t/00-load.t
 t/boilerplate.t
 t/MooseX-Meta-Attribute-Lvalue.t
