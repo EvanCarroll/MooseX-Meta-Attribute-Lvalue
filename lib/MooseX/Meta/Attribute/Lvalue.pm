@@ -1,19 +1,18 @@
 package MooseX::Meta::Attribute::Lvalue;
     
 
-  our $VERSION = '0.03';
+  our $VERSION   = '0.04';
   our $AUTHORITY = 'cpan:CTBROWN';
 
   use Moose::Role;
   
-
-    sub BUILD { } # This is a dummy version to support after.
+  sub BUILD { } # This is a dummy version to support after.
                   # It gets overwritten if the major class has 
                   # a BUILD method
 
-    after BUILD => sub { 
-        $_[0]->_install_lvalue_writer;
-    };
+  after BUILD => sub { 
+    $_[0]->_install_lvalue_writer;
+  };
 
 
 # INSTALLS a _lvalue_writer for the attribute all lvalue attributes
@@ -25,11 +24,10 @@ package MooseX::Meta::Attribute::Lvalue;
         my %attributes = %{ $self->meta->get_attribute_map };
         while ( my ($name, $attribute) = each %attributes) {
 
-            # use Data::Dumper;
-            # print Dumper( $attribute );
             if ( 
                 $attribute->does( 'MooseX::Meta::Attribute::Trait::Lvalue' ) 
-                and $attribute->{ lvalue }
+                # removed in version 0.04
+                # and $attribute->{ lvalue }
                 and $attribute->_is_metadata eq 'rw'
             ) {
 
@@ -73,11 +71,11 @@ __END__
 
 =head1 NAME
 
-MooseX::Meta::Attribute::Lvalue - Immplements lvalue accessors via meta-attribute trait
+MooseX::Meta::Attribute::Lvalue - Immplements lvalue attributes via meta-attribute trait
 
 =head1 VERSION
 
-Version 0.03
+Version 0.04
 
 =head1 SYNOPSIS
 
@@ -89,8 +87,7 @@ Version 0.03
             is          => 'rw' ,
             isa         => 'Str' ,
             required    => 1 ,
-            traits => [ 'Lvalue' ] ,   # DO NOT FORGET THIS
-            lvalue      => 1 
+            traits      => [ 'Lvalue' ] ,   # REQUIRED
         );
 
 
@@ -104,33 +101,40 @@ Version 0.03
 
 =head1 DESCRIPTION
 
+WARNING: This module provides syntactic sugar at the expense of some 
+Moose's encapsulation.  The Moose framework does not support type 
+checking of Lvalue attributes.  You should only use this role when the 
+convenience of the Lvalue attributes outweighs the need to type 
+checking.
+
 This package provides a Moose meta attribute via a role/trait that 
-provides Lvalue accessors to your Moose attributes when the Lvalue is
-true.    
+provides Lvalue accessors to your Moose attributes.  Which means that 
+instead of writing:
 
-Moose does not support lvalue accessors due to existing limitations in
-the lvalue implementation.  Specifically, the lvalue accessors break
-certain encapsulations.  However with many simple classes, you often 
-don't care and would rather use the Lvalue syntax.  This module 
-provides that functionality.
+    $myclass->name( "Foo" );
 
-While the how/when the lvalue accessor gets built might change, the 
-API will not likely change.
+You can use the more functional and natural appearing:
 
-=head1 METHODS
+    $myclass->name = "Foo";
+
+For details of Lvalue implementation in Perl, please see: 
+L<http://perldoc.perl.org/perlsub.html#Lvalue-subroutines>
+
+
+=head1 INTERNAL METHODS
 
 =over 
 
 =item _install_lvalue_writer
 
-This method installs lvalue writers for those attributes that are:
-1) rw
-2) the attribute has a true lvalue 
-3) the attribute does MooseX::Meta::Attribute::Trait::Lvalue
+This method does the work of installing lvalue writers for attributes that are:
+1) read-write 
+2) the attribute does MooseX::Meta::Attribute::Trait::Lvalue
 
 =item BUILD
 
-This is just a dummy subroutine so that we can apply after, before methods
+This is a dummy sub that does nothing.  It allows the method modifier 'after BUILD'
+which installs the lvalue writer subs.
 
 =back
 
@@ -153,7 +157,7 @@ automatically be notified of progress on your bug as I make changes.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc MooseX::Attribute::Lvalue
+    perldoc MooseX::Meta::Attribute::Lvalue
 
 
 You can also look for information at:
@@ -162,19 +166,19 @@ You can also look for information at:
 
 =item * RT: CPAN's request tracker
 
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=MooseX-Attribute-Lvalue>
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=MooseX-Meta-Attribute-Lvalue>
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
-L<http://annocpan.org/dist/MooseX-Attribute-Lvalue>
+L<http://annocpan.org/dist/MooseX-Meta-Attribute-Lvalue>
 
 =item * CPAN Ratings
 
-L<http://cpanratings.perl.org/d/MooseX-Attribute-Lvalue>
+L<http://cpanratings.perl.org/d/MooseX-Meta-Attribute-Lvalue>
 
 =item * Search CPAN
 
-L<http://search.cpan.org/dist/MooseX-Attribute-Lvalue>
+L<http://search.cpan.org/dist/MooseX-Meta-Attribute-Lvalue>
 
 =back
 

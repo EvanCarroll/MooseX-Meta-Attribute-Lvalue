@@ -1,6 +1,6 @@
 #!perl 
 
-use Test::More tests => 4;
+use Test::More tests => 7;
 
 BEGIN {
 	use_ok( 'MooseX::Meta::Attribute::Lvalue' );
@@ -17,32 +17,39 @@ diag( "Testing MooseX::Meta::Attribute::Lvalue $MooseX::Meta::Attribute::Lvalue:
             has 'name' => ( 
                 is => 'rw', isa => 'Str' , 
                 traits => [ 'Lvalue' ] , 
-                lvalue => 1 
             );
+
+
+            has 'count' => (
+                is => 'rw', isa => 'Int' ,
+                default => 0 ,
+                traits => [ 'Lvalue' ] ,
+            );
+
 
             has 'sign' => ( 
                 is => 'rw' , 
                 isa => 'Str', 
-                lvalue => 0 , 
-                traits => [ 'Lvalue' ] 
+                # traits => [ 'Lvalue' ]  # This lacks the Lvalue trait
             );
 
 }
 
 package main;
-my $app = App->new( name => 'frank', sign => 'pisces' );
+  my $app = App->new( name => 'frank', sign => 'pisces' );
+  
 
+  isa_ok( $app, "App" );
+  
+# DOES ROLES
+  ok( $app->meta->get_attribute( 'name' )->does( 'Lvalue' ), "Does Lvalue" );
+  ok( $app->meta->get_attribute( 'count' )->does( 'Lvalue' ), "Does Lvalue" );
+  ok( $app->meta->get_attribute( 'sign' )->does( 'Lvalue' ) == 0, "Doesn't  Lvalue" );
 
-isa_ok( $app, "App" );
-
-eval { $app->name = "Ralph" } ;  # Will be changed 
-ok( $app->name eq "Ralph", "Lvalue = 1" );
-
-eval { $app->sign = "aries" };   # lvalue is 0, does not get changed
-ok( $app->sign eq "pisces", "Lvalue = 0" );  
-
-
-
-# print $app->name;
-# print "has_method BUILD: " . $app->meta->has_method( 'BUILD' );
-# print $app->meta->get_attribute( "name" )->{lvalue} ;
+  eval { $app->sign = "aries" };   # lvalue is 0, does not get changed
+  ok( $app->sign eq "pisces", "Normal rw attribute" );  
+  
+  $app->name = "Ralph" ;
+  ok( $app->name eq "Ralph", "Lvalue attribute"  );
+  
+  

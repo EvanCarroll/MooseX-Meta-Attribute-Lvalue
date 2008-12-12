@@ -1,5 +1,5 @@
 ---
-abstract: 'Immplements lvalue accessors via meta-attribute trait'
+abstract: 'Immplements lvalue attributes via meta-attribute trait'
 author:
   - 'Christopher Brown <ctbrown@cpan.org>'
 build_requires:
@@ -18,4 +18,4 @@ no_index:
 requires:
   Moose: 0
   Moose::Role: 0
-version: 0.03
+version: 0.04
