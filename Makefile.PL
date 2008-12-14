@@ -6,8 +6,8 @@ author   'Christopher Brown <ctbrown@cpan.org>';
 
 build_requires 'Test::More';
 
-requires 'Moose'        => 0;
-requires 'Moose::Role'  => 0;
+requires 'Moose'        => 0.56;
+requires 'Moose::Role'  => 0.56;
 
 auto_install;
 

@@ -1,7 +1,7 @@
 package MooseX::Meta::Attribute::Lvalue;
     
 
-  our $VERSION   = '0.04';
+  our $VERSION   = '0.05';
   our $AUTHORITY = 'cpan:CTBROWN';
 
   use Moose::Role;

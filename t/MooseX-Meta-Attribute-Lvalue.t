@@ -43,7 +43,7 @@ package main;
   
 # DOES ROLES
   ok( $app->meta->get_attribute( 'name' )->does( 'Lvalue' ), "Does Lvalue" );
-  ok( $app->meta->get_attribute( 'count' )->does( 'Lvalue' ), "Does Lvalue" );
+  ok( $app->meta->get_attribute( 'count' )->does( 'Lvalue' ), "Attribute 'count' does role 'Lvalue'" );
   ok( $app->meta->get_attribute( 'sign' )->does( 'Lvalue' ) == 0, "Doesn't  Lvalue" );
 
   eval { $app->sign = "aries" };   # lvalue is 0, does not get changed
