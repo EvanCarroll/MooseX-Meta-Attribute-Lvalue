@@ -20,15 +20,16 @@ package MooseX::Meta::Attribute::Lvalue;
   sub _install_lvalue_writer {
     
         my ( $self, @args ) = @_;
+        my $meta = $self->meta;
 
-        my %attributes = %{ $self->meta->get_attribute_map };
-        while ( my ($name, $attribute) = each %attributes) {
+        for my $attr ( map $meta->get_attribute($_), sort $meta->get_attribute_list ) {
+            my $name = $attr->name;
 
             if ( 
-                $attribute->does( 'MooseX::Meta::Attribute::Trait::Lvalue' ) 
+                $attr->does( 'MooseX::Meta::Attribute::Trait::Lvalue' ) 
                 # removed in version 0.04
-                # and $attribute->{ lvalue }
-                and $attribute->_is_metadata eq 'rw'
+                # and $attr->{ lvalue }
+                and $attr->_is_metadata eq 'rw'
             ) {
 
                 $self->meta->add_method( 

@@ -1,5 +1,8 @@
 Revision history for MooseX-Meta-Attribute-Lvalue
 
+0.06    Aug 10 2010
+        - Made to work without using deprecated get_attribute_map, which also fixes tests (ECARROLL) 
+
 0.05    Dec 14 2008
         - Requires Moose, Moose::Role version 0.56
 
